@@ -71,7 +71,7 @@ async function main() {
     const leaderboard = await addComponent(aoe2net.id, 'leaderboard', leaderboardUrl);
 
     const statsUrl = 'https://aoe2.net/api/stats/players?game=aoe2de';
-    const playersInGame = await addMetric(aoe2net.id, 'leaderboard', statsUrl, 'player_stats[0].num_players.in_game');
+    const playersInGame = await addMetric(aoe2net.id, 'players_in_game', statsUrl, 'player_stats[0].num_players.in_game');
 
     // const allComponents = await prisma.component.findMany()
     // console.log(allComponents);

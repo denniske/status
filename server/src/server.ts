@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import 'source-map-support/register';
 
 import {PrismaClient} from "@prisma/client"
@@ -6,10 +7,10 @@ import {enUS} from "date-fns/locale";
 import * as cron from "node-cron";
 import fetch from "node-fetch";
 import { get } from 'lodash';
-
-const prisma = new PrismaClient({
-    log: ['query', 'info', 'warn'],
-});
+import {prisma} from "./db";
+import {buildSchema} from "type-graphql";
+import {GroupResolver} from "./resolver/group";
+import {ApolloServer} from "apollo-server";
 
 function formatDayAndTime(date: Date) {
     console.log(date);
@@ -136,8 +137,22 @@ async function check() {
 }
 
 async function main() {
-    console.log("Started scheduler");
-    check();
+    console.log("Starting graphql...");
+
+    const schema = await buildSchema({
+        resolvers: [GroupResolver],
+    });
+
+    const server = new ApolloServer({
+        debug: true,
+        schema,
+    });
+
+    const { url } = await server.listen(4005);
+    console.log(`Server is running, GraphQL Playground available at ${url}`);
+
+    // console.log("Starting scheduler...");
+    // check();
     // cron.schedule("* * * * *", check);
 }
 
@@ -148,6 +163,7 @@ main()
     .finally(async () => {
         await prisma.$disconnect()
     })
+
 
 // async function refetchMatchesSinceLastTime() {
 //     const connection = await createDB();
