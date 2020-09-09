@@ -6,11 +6,14 @@ import {parseISO} from "date-fns";
 import {IGroup, IValue} from "./types";
 import Metric from "./metric";
 import Component from "./component";
+import {useAppStyles} from "./app-styles";
 
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        flex: 1,
+        width: '100%',
         flexDirection: 'column',
     },
 }));
@@ -22,6 +25,7 @@ interface Props {
 }
 
 export default function Group({group, showMetrics, showComponents} : Props) {
+    const appClasses = useAppStyles();
     const classes = useStyles();
     const theme = useTheme();
 
@@ -30,10 +34,10 @@ export default function Group({group, showMetrics, showComponents} : Props) {
 
     return (
         <div className={classes.root}>
-
-            {/*<Typography variant="body1" noWrap>*/}
-            {/*    {group.name}*/}
-            {/*</Typography>*/}
+            <Paper className={appClasses.box}>
+                <Typography variant="body1" noWrap>
+                    {group.name}
+                </Typography>
 
             {
                 showComponents && group.components.map(component => (
@@ -45,7 +49,7 @@ export default function Group({group, showMetrics, showComponents} : Props) {
                     <Metric key={metric.name} metric={metric}/>
                 ))
             }
-
+            </Paper>
         </div>
     );
 }

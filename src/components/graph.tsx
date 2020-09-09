@@ -17,7 +17,6 @@ interface Props {
 export default function Graph({values}: Props) {
     const classes = useStyles();
 
-
     const formatTick = (tick: any, index: number, ticks: any[]) => {
         const date = ticks[index] as Date;
         if (date.getMonth() == 0 && date.getDate() == 1 && date.getHours() == 0 && date.getMinutes() == 0 && date.getSeconds() == 0) {
@@ -47,8 +46,8 @@ export default function Graph({values}: Props) {
 
     const domain = [since, domainMax] as any;
 
-    console.log('domain', domain);
-    console.log('values', values);
+    // console.log('domain', domain);
+    // console.log('values', values);
 
     return (
             <div className={classes.container}>
@@ -63,7 +62,7 @@ export default function Graph({values}: Props) {
                         <VictoryAxis crossAxis tickFormat={() => ''} />
                         {/*<VictoryAxis dependentAxis crossAxis  />*/}
                         <VictoryBar
-                            barRatio={0.1}
+                            // barRatio={0.1}
                             labelComponent={<VictoryTooltip/>}
                             name={'line'}
                             key={'line'}

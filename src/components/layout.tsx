@@ -153,7 +153,6 @@ function Layout(props) {
             {/*    </Toolbar>*/}
             {/*</AppBar>*/}
             <main className={classes.content}>
-                <div className={classes.toolbar} />
                 {children}
             </main>
         </div>

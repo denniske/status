@@ -7,10 +7,12 @@ import gql from "graphql-tag";
 import {useQuery} from "@apollo/client";
 import Group from "../components/group";
 import {IGroupsQuery} from "../components/types";
+import {useEffect} from "react";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        flex: 1,
         flexDirection: 'column',
         alignItems: 'center',
     },
@@ -49,26 +51,35 @@ function ResponsiveDrawer(props) {
 
     const profileResult = useQuery<IGroupsQuery, any>(GroupsQuery, {
         variables: {},
+        pollInterval: 60 * 1000,
     })
 
     const groups = profileResult.data?.groups;
 
     return (
         <div className={classes.root}>
-            <Paper className={appClasses.box}>
-                {
-                    groups?.map(group => (
-                        <Group key={group.name} group={group} showComponents={true}/>
-                    ))
-                }
-            </Paper>
-            <Paper className={appClasses.box}>
-                {
-                    groups?.map(group => (
-                        <Group key={group.name} group={group} showMetrics={true}/>
-                    ))
-                }
-            </Paper>
+
+            <Typography variant="body1" noWrap>
+                Status
+                <br/>
+                <br/>
+            </Typography>
+            {
+                groups?.map(group => (
+                    <Group key={group.name} group={group} showComponents={true}/>
+                ))
+            }
+
+            <Typography variant="body1" noWrap>
+                Metrics
+                <br/>
+                <br/>
+            </Typography>
+            {
+                groups?.map(group => (
+                    <Group key={group.name} group={group} showMetrics={true}/>
+                ))
+            }
         </div>
     );
 }
