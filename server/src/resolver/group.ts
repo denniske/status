@@ -28,7 +28,11 @@ export class GroupResolver {
         return await prisma.component.findMany(
             {
                 include: {
-                    status: true,
+                    status: {
+                        orderBy: {
+                            date: 'asc',
+                        }
+                    },
                 },
                 where: {
                     groupId: group.id,
@@ -42,7 +46,11 @@ export class GroupResolver {
         return await prisma.metric.findMany(
             {
                 include: {
-                    values: true,
+                    values: {
+                        orderBy: {
+                            date: 'asc',
+                        }
+                    },
                 },
                 where: {
                     groupId: group.id,

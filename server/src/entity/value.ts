@@ -8,6 +8,6 @@ export class Value {
     @Field()
     date: Date;
 
-    @Field()
+    @Field({ nullable: true })
     value?: number;
 }

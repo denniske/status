@@ -23,10 +23,10 @@ export function sleep(ms: number) {
     });
 }
 
-
 export interface IStatus {
     date: Date;
     available: boolean;
+    responseTime?: number;
 }
 
 export interface IValue {
@@ -53,6 +53,7 @@ async function addStatus(componentId: number, status: IStatus) {
             },
             date: status.date,
             available: status.available,
+            responseTime: status.responseTime,
         },
     });
 }
@@ -75,22 +76,25 @@ async function checkComponentStatus(date: Date, component: any) {
     console.log();
     console.log('Component:', component.name);
     let available = true;
+    let responseTime = null;
     try {
         const url = component.statusUrl;
+        console.log(url);
         if (url) {
-            console.log(url);
-            const response = await fetch(url, {timeout: 10 * 1000});
+            const started = new Date();
+            const response = await fetch(url, {timeout: 30 * 1000});
+            responseTime = new Date().getTime() - started.getTime();
             const json = await response.json();
         }
+        console.log('> available', responseTime);
     } catch (err) {
-        available = false;
+        console.log('> failed');
     }
-
-    console.log(available ? '> available' : '> failed');
 
     await addStatus(component.id, {
         date,
         available,
+        responseTime,
     });
 }
 
@@ -151,9 +155,9 @@ async function main() {
     const { url } = await server.listen(4005);
     console.log(`Server is running, GraphQL Playground available at ${url}`);
 
-    // console.log("Starting scheduler...");
+    console.log("Starting scheduler...");
     // check();
-    // cron.schedule("* * * * *", check);
+    cron.schedule("* * * * *", check);
 }
 
 main()

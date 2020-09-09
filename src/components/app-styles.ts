@@ -4,6 +4,9 @@ export const useAppStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
     },
+    expanded: {
+        flex: 1,
+    },
     box: {
         overflow: 'hidden',
         maxWidth: 800,

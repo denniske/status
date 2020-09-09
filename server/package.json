@@ -13,7 +13,9 @@
     "watch-node": "nodemon dist/server.js",
     "watch-ts": "tsc -w",
     "generate": "npm -s run generate:prisma",
-    "generate:prisma": "prisma generate"
+    "generate:prisma": "prisma generate",
+    "migrate:add": "npx prisma migrate save --experimental",
+    "migrate:up": "npx prisma migrate up --experimental"
   },
   "author": "",
   "license": "ISC",

@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -36,7 +36,7 @@ model Status {
 
   date           DateTime
   available      Boolean
-  responseTime   Float?      @default(100)
+  responseTime   Float       @default(100)
 
   @@id([componentId, date])
 }

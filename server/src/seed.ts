@@ -63,15 +63,21 @@ async function main() {
 
     await prisma.group.deleteMany({});
 
+    let url = '';
+
     const system = await addGroup('system');
-    const runner = await addComponent(system.id, 'runner', '');
+    await addComponent(system.id, 'runner', '');
+
+    const aoe2companion = await addGroup('aoe2companion');
+    url = 'https://function.aoe2companion.com/api/leaderboard?game=aoe2de&leaderboard_id=0&start=100000&count=100';
+    await addComponent(aoe2companion.id, 'leaderboard', url);
 
     const aoe2net = await addGroup('aoe2net');
-    const leaderboardUrl = 'https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=3&start=1&count=1';
-    const leaderboard = await addComponent(aoe2net.id, 'leaderboard', leaderboardUrl);
+    url = 'https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=3&start=1&count=1';
+    await addComponent(aoe2net.id, 'leaderboard', url);
 
     const statsUrl = 'https://aoe2.net/api/stats/players?game=aoe2de';
-    const playersInGame = await addMetric(aoe2net.id, 'players_in_game', statsUrl, 'player_stats[0].num_players.in_game');
+    await addMetric(aoe2net.id, 'players_in_game', statsUrl, 'player_stats[0].num_players.in_game');
 
     // const allComponents = await prisma.component.findMany()
     // console.log(allComponents);

@@ -10,4 +10,7 @@ export class Status {
 
     @Field()
     available: boolean;
+
+    @Field({ nullable: true })
+    responseTime?: number;
 }
