@@ -1,0 +1,5 @@
+# Prisma Migrate lockfile v1
+
+20200909124423-init
+20200909131024-metric-path
+20200909132115-metric-value-nullable
