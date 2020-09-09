@@ -69,6 +69,10 @@ async function main() {
     await addComponent(system.id, 'runner', '');
 
     const aoe2companion = await addGroup('aoe2companion');
+    url = 'https://import.aoe2companion.com/health';
+    await addComponent(aoe2companion.id, 'import', url);
+    url = 'https://notify.aoe2companion.com/health';
+    await addComponent(aoe2companion.id, 'notify', url);
     url = 'https://function.aoe2companion.com/api/leaderboard?game=aoe2de&leaderboard_id=0&start=100000&count=100';
     await addComponent(aoe2companion.id, 'leaderboard', url);
 

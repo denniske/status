@@ -3,7 +3,7 @@ import {VictoryAxis, VictoryBar, VictoryChart, VictoryLine, VictoryTheme, Victor
 import {makeStyles} from "@material-ui/core/styles";
 import useDimensions from "../hooks/use-dimensions";
 import {formatDateShort, formatMonth, formatTime, formatYear} from "../helper/util";
-import {isAfter, subDays, subMinutes, subMonths, subWeeks} from "date-fns";
+import {isAfter, isEqual, subDays, subMinutes, subMonths, subWeeks} from "date-fns";
 
 export interface IChartValue {
     date: Date,
@@ -36,6 +36,10 @@ export default function Graph({values}: Props) {
     const since = subMinutes(new Date(), 60);
     values = values.filter(d => isAfter(d.date!, since));
 
+    // for (let minute = 0; minute < 60; minute++) {
+    //     if (values.find(v => v.date))
+    // }
+
     // console.log('domain', [since, new Date()]);
 
     const domainMax = new Date();
@@ -45,6 +49,13 @@ export default function Graph({values}: Props) {
     since.setMilliseconds(0);
 
     const domain = [since, domainMax] as any;
+
+    // if (!values.find(v => isEqual(v.date, since))) {
+    //     values.unshift({
+    //         date: since,
+    //         value: 1,
+    //     });
+    // }
 
     // console.log('domain', domain);
     // console.log('values', values);
@@ -56,12 +67,13 @@ export default function Graph({values}: Props) {
                         domain={{x: domain}}
                         width={width} height={70}
                         theme={VictoryTheme.material}
-                        padding={{left: 50, bottom: 10, top: 10, right: 20}}
+                        padding={{left: 20, bottom: 10, top: 10, right: 20}}
                         scale={{ x: "time" }}
                     >
                         <VictoryAxis crossAxis tickFormat={() => ''} />
                         {/*<VictoryAxis dependentAxis crossAxis  />*/}
                         <VictoryBar
+                            barWidth={width / 60 / 2}
                             // barRatio={0.1}
                             labelComponent={<VictoryTooltip/>}
                             name={'line'}

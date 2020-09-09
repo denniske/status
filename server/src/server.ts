@@ -86,8 +86,13 @@ async function checkComponentStatus(date: Date, component: any) {
             responseTime = new Date().getTime() - started.getTime();
             const json = await response.json();
         }
-        console.log('> available', responseTime);
     } catch (err) {
+        available = false;
+    }
+
+    if (available) {
+        console.log('> available', responseTime);
+    } else {
         console.log('> failed');
     }
 
