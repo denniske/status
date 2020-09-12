@@ -168,7 +168,7 @@ const typesMap = {
 function createIsomorphLink() {
   const { HttpLink } = require('apollo-link-http')
   return new HttpLink({
-    uri: 'http://localhost:4005/api',
+    uri: process.env.NEXT_PUBLIC_API_URL,
     credentials: 'same-origin',
   })
 }
