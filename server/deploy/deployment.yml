@@ -23,7 +23,7 @@ spec:
               name: http
           envFrom:
             - secretRef:
-                name: server-secret
+                name: status-server-secret
           env:
             - name: PORT
               value: "80"
