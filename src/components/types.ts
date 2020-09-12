@@ -7,6 +7,7 @@ export interface IStatus {
 
 export interface IComponent {
     name: string;
+    delayInMinutes: number;
     status: IStatus[];
 }
 
@@ -17,6 +18,7 @@ export interface IValue {
 
 export interface IMetric {
     name: string;
+    delayInMinutes: number;
     values: IValue[];
 }
 

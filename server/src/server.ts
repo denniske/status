@@ -2,7 +2,7 @@ import "reflect-metadata";
 import 'source-map-support/register';
 
 import {PrismaClient} from "@prisma/client"
-import {format, fromUnixTime} from "date-fns";
+import {format, fromUnixTime, subMinutes} from "date-fns";
 import {enUS} from "date-fns/locale";
 import * as cron from "node-cron";
 import fetch, {Response} from "node-fetch";
@@ -14,6 +14,8 @@ import {ApolloServer} from "apollo-server";
 import request, {gql} from "graphql-request";
 import { v4 as uuidv4 } from 'uuid';
 import {run} from "tslint/lib/runner";
+
+require('dotenv').config();
 
 // let JOB_NAME = 'test';
 // let RUN_ID = uuidv4();
@@ -190,8 +192,55 @@ async function fetchMetric(date: Date, metric: any) {
     });
 }
 
-async function check() {
+function checkCondition(value: number, condition: string, conditionValue: number) {
+    switch (condition) {
+        case '<':
+            console.log('check', value, '<', conditionValue);
+            return value < conditionValue;
+    }
+}
 
+const mail = require('@sendgrid/mail');
+mail.setApiKey(process.env.SENDGRID_API_KEY);
+
+async function sendAlert(alert: any) {
+    const subject = 'AoE II Companion Alert ' + alert.metric.name;
+    const msg = {
+        to: process.env.ALERT_MAIL_TO,
+        from: 'alert@aoe2companion.com',
+        subject,
+        text: 'Alert for ' + alert.metric.name,
+    };
+    await prisma.alert.update({
+        where: {
+            id: alert.id,
+        },
+        data: {
+            activated: true,
+        },
+    });
+    await mail.send(msg);
+}
+
+async function checkAlert(date: Date, alert: any) {
+    if (alert.metric) {
+        const values = await prisma.value.findMany({
+            where: {
+                metricId: alert.metricId,
+                date: {
+                    gt: subMinutes(date, 5 * alert.metric.delayInMinutes),
+                },
+            },
+        });
+        console.log(values);
+        if (values.length === 5 && values.every(v => checkCondition(v.value, alert.condition, alert.conditionValue))) {
+            console.log('sending alert');
+            await sendAlert(alert);
+        }
+    }
+}
+
+async function check() {
     const date = new Date();
     date.setSeconds(0);
     date.setMilliseconds(0);
@@ -202,17 +251,33 @@ async function check() {
 
     const components = await prisma.component.findMany({});
     for (const component of components) {
+        if (minute % component.delayInMinutes != 0) continue;
         await checkComponentStatus(date, component);
-        await sleep(5000);
+        await sleep(500);
     }
 
     const metrics = await prisma.metric.findMany({});
     for (const metric of metrics) {
+        if (minute % metric.delayInMinutes != 0) continue;
         await fetchMetric(date, metric);
+    }
+
+    const alerts = await prisma.alert.findMany({
+        include: {
+            component: true,
+            metric: true,
+        },
+        where: {
+            activated: false,
+        },
+    });
+    for (const alert of alerts) {
+        await checkAlert(date, alert);
     }
 }
 
 let running = false;
+let minute = 0;
 
 async function main() {
     console.log("Starting graphql...");
@@ -226,18 +291,20 @@ async function main() {
         schema,
     });
 
+    console.log('process.env.PORT', process.env.PORT);
     const { url } = await server.listen(process.env.PORT);
     console.log(`Server is running, GraphQL Playground available at ${url}`);
 
     console.log("Starting scheduler...");
     // check();
     cron.schedule("0 * * * * *", async () => {
-        console.log("Last job:", running);
-        if (running) {
-            console.log("Last job still running.");
-            return;
-        }
-        running = true;
+        minute++;
+        // console.log("Last job:", running);
+        // if (running) {
+        //     console.log("Last job still running.");
+        //     return;
+        // }
+        // running = true;
         // RUN_ID = uuidv4();
         // updateRun({ runId: RUN_ID, started: new Date()});
         let error = null;
@@ -247,7 +314,7 @@ async function main() {
             error = err;
             console.error(err);
         }
-        running = false;
+        // running = false;
         // updateRun({ runId: RUN_ID, finished: new Date(), success: error == null});
     });
 }

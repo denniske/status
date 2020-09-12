@@ -82,9 +82,12 @@ export default function Component({component} : Props) {
                 </div>
             </div>
 
-            <Graph key={component.name} values={componentStatusToGraphData(component.status)}/>
+            <Graph key={component.name} values={componentStatusToGraphData(component.status)} delayInMinutes={component.delayInMinutes}/>
 
             <div className={classes.row}>
+                <div className={classes.responseTime}>
+                    {component.delayInMinutes*60}m
+                </div>
                 <div className={appClasses.expanded}/>
                 <div className={classes.responseTime}>
                     {responseTime ? responseTime.toFixed()+' ms' : ''}

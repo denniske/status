@@ -10,6 +10,9 @@ export class Metric {
     @Field()
     name: string;
 
+    @Field({ defaultValue: 1 })
+    delayInMinutes: number;
+
     @Field(type => [Value])
     values: Value[];
 }

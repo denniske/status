@@ -24,6 +24,7 @@ const GroupsQuery = gql`
             name
             components {
                 name
+                delayInMinutes
                 status {
                     date
                     available
@@ -33,6 +34,7 @@ const GroupsQuery = gql`
             metrics {
                 id
                 name
+                delayInMinutes
                 values {
                     date
                     value

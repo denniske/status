@@ -37,6 +37,7 @@ export class GroupResolver {
                 where: {
                     groupId: group.id,
                 },
+                take: 60,
             },
         );
     }
@@ -55,6 +56,7 @@ export class GroupResolver {
                 where: {
                     groupId: group.id,
                 },
+                take: 60,
             },
         );
     }

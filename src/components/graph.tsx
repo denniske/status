@@ -12,9 +12,10 @@ export interface IChartValue {
 
 interface Props {
     values: IChartValue[];
+    delayInMinutes: number;
 }
 
-export default function Graph({values}: Props) {
+export default function Graph({values, delayInMinutes}: Props) {
     const classes = useStyles();
 
     const formatTick = (tick: any, index: number, ticks: any[]) => {
@@ -33,14 +34,8 @@ export default function Graph({values}: Props) {
 
     const [measureRef, { width }] = useDimensions();
 
-    const since = subMinutes(new Date(), 60);
+    const since = subMinutes(new Date(), 60*delayInMinutes);
     values = values.filter(d => isAfter(d.date!, since));
-
-    // for (let minute = 0; minute < 60; minute++) {
-    //     if (values.find(v => v.date))
-    // }
-
-    // console.log('domain', [since, new Date()]);
 
     const domainMax = new Date();
     domainMax.setSeconds(0);
@@ -50,24 +45,14 @@ export default function Graph({values}: Props) {
 
     const domain = [since, domainMax] as any;
 
-    // if (!values.find(v => isEqual(v.date, since))) {
-    //     values.unshift({
-    //         date: since,
-    //         value: 1,
-    //     });
-    // }
-
-    // console.log('domain', domain);
-    // console.log('values', values);
-
     return (
             <div className={classes.container}>
                 <div ref={measureRef}>
                     <VictoryChart
                         domain={{x: domain}}
-                        width={width} height={70}
+                        width={width} height={53}
                         theme={VictoryTheme.material}
-                        padding={{left: 20, bottom: 10, top: 10, right: 20}}
+                        padding={{left: 20, bottom: 5, top: 8, right: 20}}
                         scale={{ x: "time" }}
                     >
                         <VictoryAxis crossAxis tickFormat={() => ''} />

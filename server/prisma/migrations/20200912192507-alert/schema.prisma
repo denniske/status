@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -75,7 +75,6 @@ model Alert {
   metricId          Int?
   metric            Metric?      @relation(fields: [metricId], references: [id])
 
-  condition         String?
-  conditionValue    Float?
-  activated         Boolean      @default(false)
+  condition         String
+  activated         Boolean
 }

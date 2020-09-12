@@ -9,6 +9,9 @@ export class Component {
     @Field()
     name: string;
 
+    @Field({ defaultValue: 1 })
+    delayInMinutes: number;
+
     @Field(type => [Status])
     status: Status[];
 }
