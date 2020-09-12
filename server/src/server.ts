@@ -226,7 +226,7 @@ async function main() {
         schema,
     });
 
-    const { url } = await server.listen(4005);
+    const { url } = await server.listen(process.env.PORT);
     console.log(`Server is running, GraphQL Playground available at ${url}`);
 
     console.log("Starting scheduler...");
