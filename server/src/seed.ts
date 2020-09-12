@@ -80,6 +80,14 @@ async function main() {
     url = 'https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=3&start=1&count=1';
     await addComponent(aoe2net.id, 'leaderboard', url);
 
+    const metricUrl = 'https://metric.aoe2companion.com';
+    await addMetric(aoe2companion.id, 'sentPushNotifications', metricUrl, 'sentPushNotifications');
+    await addMetric(aoe2companion.id, 'importedMatches', metricUrl, 'importedMatches');
+    await addMetric(aoe2companion.id, 'unfinishedMatches', metricUrl, 'unfinishedMatches');
+    await addMetric(aoe2companion.id, 'finishedMatches', metricUrl, 'finishedMatches');
+    await addMetric(aoe2companion.id, 'finishedButUndecidedMatches', metricUrl, 'finishedButUndecidedMatches');
+    await addMetric(aoe2companion.id, 'leaderboardLastMatchTimeDiffInMinutes', metricUrl, 'leaderboardLastMatchTimeDiffInMinutes');
+
     const statsUrl = 'https://aoe2.net/api/stats/players?game=aoe2de';
     await addMetric(aoe2net.id, 'players_in_game', statsUrl, 'player_stats[0].num_players.in_game');
 
