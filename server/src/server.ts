@@ -228,12 +228,12 @@ async function checkAlert(date: Date, alert: any) {
             where: {
                 metricId: alert.metricId,
                 date: {
-                    gt: subMinutes(date, 5 * alert.metric.delayInMinutes),
+                    gte: subMinutes(date, 10),
                 },
             },
         });
-        console.log(values);
-        if (values.length === 5 && values.every(v => checkCondition(v.value, alert.condition, alert.conditionValue))) {
+        console.log(values, values.length, 10 / alert.metric.delayInMinutes);
+        if ((values.length >= 10 / alert.metric.delayInMinutes) && values.every(v => checkCondition(v.value, alert.condition, alert.conditionValue))) {
             console.log('sending alert');
             await sendAlert(alert);
         }
