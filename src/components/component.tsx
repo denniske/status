@@ -5,6 +5,7 @@ import Graph, {IChartValue} from "./graph";
 import {parseISO} from "date-fns";
 import {IComponent, IGroup, IMetric, IStatus, IValue} from "./types";
 import {useAppStyles} from "./app-styles";
+import {orderBy} from "lodash";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -41,6 +42,7 @@ interface Props {
 }
 
 function componentStatusToGraphData(values: IStatus[]): IChartValue[] {
+    values = orderBy(values, d => d.date, 'asc');
     return values.map((value, i) => ({
         date: parseISO(value.date),
         value: value.available ? 1 : 1,
@@ -53,7 +55,8 @@ export default function Component({component} : Props) {
     const appClasses = useAppStyles();
     const theme = useTheme();
 
-    const lastStatus = component.status.length > 0 ? component.status[component.status.length-1].available : null;
+    const values = orderBy(component.status, d => d.date, 'asc');
+    const lastStatus = values.length > 0 ? values[values.length-1].available : null;
 
     let statusColor = '#CCC';
     if (lastStatus === true) {

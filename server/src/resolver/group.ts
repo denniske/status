@@ -30,14 +30,14 @@ export class GroupResolver {
                 include: {
                     status: {
                         orderBy: {
-                            date: 'asc',
-                        }
+                            date: 'desc',
+                        },
+                        take: 60,
                     },
                 },
                 where: {
                     groupId: group.id,
                 },
-                take: 60,
             },
         );
     }
@@ -49,14 +49,14 @@ export class GroupResolver {
                 include: {
                     values: {
                         orderBy: {
-                            date: 'asc',
-                        }
+                            date: 'desc',
+                        },
+                        take: 60,
                     },
                 },
                 where: {
                     groupId: group.id,
                 },
-                take: 60,
             },
         );
     }

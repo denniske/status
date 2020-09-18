@@ -5,6 +5,7 @@ import Graph, {IChartValue} from "./graph";
 import {parseISO} from "date-fns";
 import {IGroup, IMetric, IValue} from "./types";
 import {useAppStyles} from "./app-styles";
+import {orderBy} from "lodash";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +32,7 @@ interface Props {
 }
 
 function metricValuesToGraphData(values: IValue[]): IChartValue[] {
+    values = orderBy(values, d => d.date, 'asc');
     return values.map(value => ({
         date: parseISO(value.date),
         value: value.value,

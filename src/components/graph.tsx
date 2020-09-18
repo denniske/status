@@ -4,6 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import useDimensions from "../hooks/use-dimensions";
 import {formatDateShort, formatMonth, formatTime, formatYear} from "../helper/util";
 import {isAfter, isEqual, subDays, subMinutes, subMonths, subWeeks} from "date-fns";
+import { orderBy } from 'lodash';
 
 export interface IChartValue {
     date: Date,
